@@ -1,0 +1,30 @@
+{
+  "name": "weatherapp",
+  "private": true,
+  "description": "Application that allows to check weather in Ukrainian locations",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yarostbaklajana/WeatherApp.git"
+  },
+  "author": "Anastasiia Skorobogata",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/yarostbaklajana/WeatherApp/issues"
+  },
+  "homepage": "https://github.com/yarostbaklajana/WeatherApp#readme",
+  "devDependencies": {
+    "babel-core": "6.23.1",
+    "babel-loader": "6.3.2",
+    "babel-preset-es2015": "6.22.0",
+    "babel-preset-react": "6.23.0",
+    "webpack": "2.2.1"
+  },
+  "dependencies": {
+    "axios": "0.15.3",
+    "moment": "2.17.1",
+    "react": "15.4.2"
+  }
+}
