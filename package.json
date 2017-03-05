@@ -5,6 +5,7 @@
     "scripts": {
         "build": "webpack --bail",
         "build:watch": "webpack --watch",
+        "build:prod": "webpack --bail --env prod",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "repository": {
