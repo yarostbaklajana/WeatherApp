@@ -1,8 +1,9 @@
 import ReactDom from 'react-dom';
 import React from 'react';
+import './styles.css';
 
-function Congratulator() {
-    return ( <h1>Hello World</h1> );
+function Congratulator(props) {
+    return ( <h1 className='congratulations'>Hello World</h1> );
 }
 
 ReactDom.render(
