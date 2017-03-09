@@ -28,6 +28,11 @@ module.exports = function (env) {
                 },
 
                 {
+                    test: /\.json$/,
+                    use: 'json-loader'
+                },
+
+                {
                     test: /\.html$/,
                     use: 'html-loader'
                 },

@@ -1,12 +1,9 @@
 import ReactDom from 'react-dom';
 import React from 'react';
+import InputWithAutocomplete from './components/inputWithAutocomplete';
 import './styles.css';
 
-function Congratulator(props) {
-    return ( <h1 className='congratulations'>Hello World</h1> );
-}
-
 ReactDom.render(
-    <Congratulator />,
+    <InputWithAutocomplete  />,
     document.getElementById('container')
 )
