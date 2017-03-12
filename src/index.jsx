@@ -1,9 +1,10 @@
 import ReactDom from 'react-dom';
 import React from 'react';
-import InputWithAutocomplete from './components/inputWithAutocomplete';
+
+import App from './components/app';
 import './styles.css';
 
 ReactDom.render(
-    <InputWithAutocomplete  />,
+    <App />,
     document.getElementById('container')
 )
