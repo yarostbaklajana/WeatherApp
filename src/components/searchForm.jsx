@@ -10,35 +10,30 @@ class SearchForm extends React.Component {
         }
 
         this.handleChange = this.handleChange.bind(this);
-         this.showValidationMessage = this.showValidationMessage.bind(this);
-
     }
 
     handleChange(value) {
-        console.log(value);
         this.setState({
             inputText: value,
-            isSubmitable: this.validateValue(value)
+            isSubmitable: this.isValid(value)
         });
     }
 
-     validateValue(part) {
+    isValid(part) {
         var validValues = (part === '') ? [] : this.props.locations.filter((location) => location.name.toUpperCase().startsWith(part.toUpperCase())).slice(0, 10).find((hint) => hint.name === part);
         return validValues !== undefined;
     }
 
-    showValidationMessage() {
-        return (this.state.isSubmitable || this.state.inputText === '') ? '' : <p className='validation-message'>Input value is no Valid</p>
-    }
-
     render() {
+        let validationMessage = (this.state.isSubmitable || this.state.inputText === '') ? null : <p className='validation-message'>Input value is no Valid</p>
+
         return (
             <form className='search-form'>
-                <InputWithAutocomplete onChange={this.handleChange} locations={this.props.locations} />
-                
+                <InputWithAutocomplete onChange={this.handleChange} value={this.state.inputText} locations={this.props.locations} />
+
                 <button className='search-button' type='submit' disabled={!this.state.isSubmitable}>Show Weather</button>
-                {this.showValidationMessage()}
-            </form> )
+                {validationMessage}
+            </form>)
     }
 }
 
