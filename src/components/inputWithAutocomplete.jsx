@@ -5,35 +5,36 @@ class InputWithAutocomplete extends React.Component {
         super(props);
 
         this.state = {
-            isVisibleHints: false
+            hints: []
         }
 
         this.handleChange = this.handleChange.bind(this);
         this.fillInputWithCheckedHint = this.fillInputWithCheckedHint.bind(this);
         this.closeHints = this.closeHints.bind(this);
-        this.findHints = this.findHints.bind(this);
     }
 
     handleChange(event) {
         let inputValue = event.target.value;
-
         this.setState({
-            isVisibleHints: this.findHints(inputValue).length !== 0
+            hints: this.findHints(inputValue)
         });
-
         this.props.onChange(inputValue);
     }
 
     findHints(part) {
-        let hints = (part === '') ? [] : this.props.locations.filter((location) => location.name.toUpperCase().startsWith(part.toUpperCase())).slice(0, 10);
+        let hints = [];
+        if (part !== '') {
+            hints = this.props.options.filter((option) => option.toUpperCase().startsWith(part.toUpperCase())).slice(0, 10);
+        }
         return hints;
     }
 
+
     fillInputWithCheckedHint(hint) {
-        let checkedValue = hint.name;
+        let checkedValue = hint;
 
         this.setState({
-            isVisibleHints: false
+            hints: []
         });
 
         this.props.onChange(checkedValue);
@@ -41,20 +42,19 @@ class InputWithAutocomplete extends React.Component {
 
     closeHints() {
         this.setState({
-            isVisibleHints: false
+            hints: []
         });
     }
 
     render() {
-        let hintsList = this.state.isVisibleHints ? this.findHints(this.props.value).map((hint) => <li className='locations-hints_hint' onClick={() => this.fillInputWithCheckedHint(hint)} name={hint.name} key={hint.id}>{hint.name}</li>) : null;
-        const backdrop = this.state.isVisibleHints ? <div className='backdrop' onClick={this.closeHints}></div> : null;
-        
+        let hintsList = this.state.hints.map((hint) => <li className='options-hints_hint' onClick={() => this.fillInputWithCheckedHint(hint)} name={hint} key={hint}>{hint}</li>);
+
         return (
             <div>
-                {backdrop}
+                {this.state.hints.length >= 1 && <div className='backdrop' onClick={this.closeHints}></div>}
                 <div className='input-container'>
                     <input className='input-with-autocomplete' type="text" value={this.props.value} onChange={this.handleChange} />
-                    <ul className='locations-hints'>{hintsList}</ul>
+                    <ul className='options-hints'>{hintsList}</ul>
                 </div>
             </div>
         );

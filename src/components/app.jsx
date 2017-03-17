@@ -1,6 +1,5 @@
 import React from 'react';
 import SearchForm from './searchForm';
-import * as locationsArr from '../../locations/ukraine.json';
 
 class App extends React.Component {
     constructor(props) {
@@ -11,7 +10,7 @@ class App extends React.Component {
     render() {
         return (
             <div className='app-container'>
-                <SearchForm locations={locationsArr} />
+                <SearchForm />
             </div>
         )
     }
