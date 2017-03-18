@@ -26,7 +26,7 @@ body {
      z-index: 100;
 }
 
-.options-hints {
+.hints {
     width: 95%;
     margin: 0;
     padding: 0;
@@ -38,11 +38,11 @@ body {
     background: white;
 }
 
-.options-hints_hint {
+.hints_hint {
         padding: 1px 0;
 }
 
-.options-hints_hint:hover {
+.hints_hint:hover {
     background-color: lightgrey;
 }
 

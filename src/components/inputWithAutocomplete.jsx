@@ -47,14 +47,14 @@ class InputWithAutocomplete extends React.Component {
     }
 
     render() {
-        let hintsList = this.state.hints.map((hint) => <li className='options-hints_hint' onClick={() => this.fillInputWithCheckedHint(hint)} name={hint} key={hint}>{hint}</li>);
+        let hintsList = this.state.hints.map((hint) => <li className='hints_hint' onClick={() => this.fillInputWithCheckedHint(hint)} key={hint}>{hint}</li>);
 
         return (
             <div>
-                {this.state.hints.length >= 1 && <div className='backdrop' onClick={this.closeHints}></div>}
+                {this.state.hints.length > 0 && <div className='backdrop' onClick={this.closeHints}></div>}
                 <div className='input-container'>
                     <input className='input-with-autocomplete' type="text" value={this.props.value} onChange={this.handleChange} />
-                    <ul className='options-hints'>{hintsList}</ul>
+                    <ul className='hints'>{hintsList}</ul>
                 </div>
             </div>
         );

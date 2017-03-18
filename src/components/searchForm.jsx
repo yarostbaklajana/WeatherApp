@@ -18,25 +18,27 @@ class SearchForm extends React.Component {
     handleChange(value) {
         this.setState({
             inputText: value,
-            isSubmitable: this.isSubmitable(value),
+            isSubmitable: this.isValid(value),
             wasChanged: true
         });
     }
 
     handleSubmit(event) {
         event.preventDefault();
-        alert('Submitted');
+        if (this.state.isSubmitable) {
+            alert('Submitted');
+        }
     }
 
-    isSubmitable(part) {
+    isValid(part) {
         return locationsMap.hasOwnProperty(part);
     }
 
     render() {
         return (
-            <form className='search-form'>
+            <form onSubmit={this.handleSubmit} className='search-form'>
                 <InputWithAutocomplete onChange={this.handleChange} value={this.state.inputText} options={this.state.locationsNames} />
-                <button onClick={this.handleSubmit} className='search-button' type='submit' disabled={!this.state.isSubmitable}>Show Weather</button>
+                <button className='search-button' type='submit' disabled={!this.state.isSubmitable}>Show Weather</button>
                 {!this.state.isSubmitable && this.state.wasChanged && <p className='validation-message'>The Input value is not a correct Ukrainian location</p>}
             </form>)
     }
