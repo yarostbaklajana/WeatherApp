@@ -14,11 +14,14 @@ const allLocationsArr = allLocationsString.split(endOfLine).filter((entry) => en
 const allLocationsValidString = allLocationsArr.join(',');
 const allLocations = JSON.parse(`[${allLocationsArr}]`);
 
+let uniqueUALocationsMap = {};
 const allUALocations = allLocations
     .filter((location) => location.country === 'UA')
-    .map((location) => ({ id: location._id, name: location.name }));
+    .forEach(function(location) {
+        uniqueUALocationsMap[location.name] = location._id;
+    });
 
-const allUALocationsString = JSON.stringify(allUALocations);
+const allUALocationsString = JSON.stringify(uniqueUALocationsMap);
 
 const outputPath = path.join(locationsDirectory, 'ukraine.json');
 fs.writeFileSync(outputPath, allUALocationsString);

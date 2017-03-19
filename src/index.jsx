@@ -1,12 +1,10 @@
 import ReactDom from 'react-dom';
 import React from 'react';
+
+import App from './components/app';
 import './styles.css';
 
-function Congratulator(props) {
-    return ( <h1 className='congratulations'>Hello World</h1> );
-}
-
 ReactDom.render(
-    <Congratulator />,
+    <App />,
     document.getElementById('container')
 )

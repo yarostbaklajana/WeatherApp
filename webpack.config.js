@@ -26,7 +26,7 @@ module.exports = function (env) {
                     use: 'babel-loader',
                     exclude: ['node_modules']
                 },
-
+                
                 {
                     test: /\.html$/,
                     use: 'html-loader'
