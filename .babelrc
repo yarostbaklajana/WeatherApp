@@ -7,5 +7,8 @@
             }
         ],
         "react"
-    ]
+    ],
+  "plugins": [
+    ["transform-inline-environment-variables"]
+  ]
 }

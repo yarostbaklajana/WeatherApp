@@ -4,10 +4,18 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
 
 module.exports = function (env) {
+    
     const isProd = env === "prod";
     if (isProd) {
         process.env.NODE_ENV = "production";
     }
+
+    console.info(`This build is in production mode: ${isProd}`);
+
+    if(process.env.OPENWEATHER_API_KEY === undefined) {
+        throw new Error('You need to set OPENWEATHER_API_KEY!');
+    }
+
     const config = {
         context: path.join(__dirname, '/src'),
         entry: './index',
@@ -60,11 +68,6 @@ module.exports = function (env) {
 
     if (isProd) {
         config.plugins.push(
-            new webpack.DefinePlugin({
-                'process.env': {
-                    'NODE_ENV': JSON.stringify('production')
-                }
-            }),
             new webpack.optimize.UglifyJsPlugin({
                 compress: {
                     warnings: false
