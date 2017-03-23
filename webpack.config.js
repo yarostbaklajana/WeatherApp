@@ -12,8 +12,8 @@ module.exports = function (env) {
 
     console.info(`This build is in production mode: ${isProd}`);
 
-    if(process.env.OPENWEATHER_API_KEY === undefined) {
-        throw new Error('You need to set OPENWEATHER_API_KEY!');
+    if(!process.env.OPENWEATHER_API_KEY) {
+        throw new Error('You need to set OPENWEATHER_API_KEY as environment variable!');
     }
 
     const config = {
