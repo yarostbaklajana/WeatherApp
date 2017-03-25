@@ -1,5 +1,5 @@
 {
-     "presets": [
+    "presets": [
         [
             "es2015",
             {
@@ -8,7 +8,8 @@
         ],
         "react"
     ],
-  "plugins": [
-    ["transform-inline-environment-variables", "transform-async-to-generator"]
-  ]
+    "plugins": [
+        "transform-async-to-generator",
+        "transform-inline-environment-variables"
+    ]
 }
