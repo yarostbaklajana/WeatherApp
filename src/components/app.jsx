@@ -14,7 +14,7 @@ class App extends React.Component {
         try {
             console.log(await this.getForecasts(cityID));
         } catch (err) {
-            console.log(err);
+            console.error(err);
         }
         
     }
