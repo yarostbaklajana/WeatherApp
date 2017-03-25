@@ -9,6 +9,6 @@
         "react"
     ],
   "plugins": [
-    ["transform-inline-environment-variables"]
+    ["transform-inline-environment-variables", "transform-async-to-generator"]
   ]
 }
