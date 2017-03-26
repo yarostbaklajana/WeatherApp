@@ -10,26 +10,26 @@ class App extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    async handleSubmit(cityID) {
+    async handleSubmit(cityId) {
         try {
-            console.log(await this.getForecasts(cityID));
+            console.log(await this.getForecast(cityId));
         } catch (err) {
             console.error(err);
         }
         
     }
 
-    async getForecasts(cityID) {
+    async getForecast(cityId) {
         try {
-            const fiveDayForecast = await axios.get('http://api.openweathermap.org/data/2.5/forecast', {
+            const fiveDayForecast = await axios.get('https://api.openweathermap.org/data/2.5/forecast', {
                 params: {
-                    id: cityID,
+                    id: cityId,
                     APPID: process.env.OPENWEATHER_API_KEY,
                     units: 'metric'
                 }
             });
             
-            const threeDayForecastList = fiveDayForecast.data.list.slice(0, 21);
+            const threeDayForecastList = fiveDayForecast.data.list.slice(0, 25);
 
             return this.getForecastCards(threeDayForecastList);
         } catch (err) {
@@ -38,14 +38,14 @@ class App extends React.Component {
     }
 
     getForecastCards(allForecastedDataArray) {
-        let forecastCards = [];
+        const forecastCards = [];
         allForecastedDataArray.forEach((singleForecast) => { forecastCards.push({
                 dateTime: this.convertToLocaleDateTime(singleForecast.dt),
                 weather: singleForecast.weather[0].description,
-                weatherIconId: singleForecast.weather[0].id,
+                weatherIconUrl: `https://openweathermap.org/img/w/${singleForecast.weather[0].id}.png`,
                 temperature: singleForecast.main.temp,
                 humidity: singleForecast.main.humidity,
-                pressure: singleForecast.main.pressure,
+                pressure: this.convertHectopascalsToMmHg(singleForecast.main.pressure),
                 wind: {
                     direction: this.convertToCompassDirection(singleForecast.wind.deg),
                     speed: singleForecast.wind.speed.toFixed(1)
@@ -60,11 +60,11 @@ class App extends React.Component {
     }
 
     convertHectopascalsToMmHg(hPa) {
-        return hpa * 0,75;
+        return (hPa * 0.75).toFixed(0);
     }
 
     convertToCompassDirection(directionInDeg) {
-        if (directionInDeg >= 337.2 && directionInDeg <= 22.5) {
+        if (directionInDeg >= 337.5 && directionInDeg <= 22.5) {
             return 'N';
         } else if (directionInDeg > 22.5 && directionInDeg < 67.5) {
             return 'NE';
