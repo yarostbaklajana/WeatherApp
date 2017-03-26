@@ -21,7 +21,7 @@ class App extends React.Component {
 
     async getForecast(cityId) {
         try {
-            const fiveDayForecast = await axios.get('https://api.openweathermap.org/data/2.5/forecast', {
+            const fiveDayForecast = await axios.get('http://api.openweathermap.org/data/2.5/forecast', {
                 params: {
                     id: cityId,
                     APPID: process.env.OPENWEATHER_API_KEY,
@@ -42,7 +42,7 @@ class App extends React.Component {
         allForecastedDataArray.forEach((singleForecast) => { forecastCards.push({
                 dateTime: this.convertToLocaleDateTime(singleForecast.dt),
                 weather: singleForecast.weather[0].description,
-                weatherIconUrl: `https://openweathermap.org/img/w/${singleForecast.weather[0].id}.png`,
+                weatherIconUrl: `http://openweathermap.org/img/w/${singleForecast.weather[0].id}.png`,
                 temperature: singleForecast.main.temp,
                 humidity: singleForecast.main.humidity,
                 pressure: this.convertHectopascalsToMmHg(singleForecast.main.pressure),
