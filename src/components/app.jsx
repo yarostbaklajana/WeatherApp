@@ -29,7 +29,7 @@ class App extends React.Component {
                 }
             });
             
-            const threeDayForecastList = fiveDayForecast.data.list.slice(0, 25);
+            const threeDayForecastList = fiveDayForecast.data.list.slice(0, 24);
 
             return this.getForecastCards(threeDayForecastList);
         } catch (err) {
@@ -43,7 +43,7 @@ class App extends React.Component {
                 dateTime: this.convertToLocaleDateTime(singleForecast.dt),
                 weather: singleForecast.weather[0].description,
                 weatherIconUrl: `http://openweathermap.org/img/w/${singleForecast.weather[0].id}.png`,
-                temperature: singleForecast.main.temp,
+                temperature: Math.round(singleForecast.main.temp),
                 humidity: singleForecast.main.humidity,
                 pressure: this.convertHectopascalsToMmHg(singleForecast.main.pressure),
                 wind: {
@@ -60,7 +60,7 @@ class App extends React.Component {
     }
 
     convertHectopascalsToMmHg(hPa) {
-        return (hPa * 0.75).toFixed(0);
+        return Math.round(hPa * 0.75);
     }
 
     convertToCompassDirection(directionInDeg) {
