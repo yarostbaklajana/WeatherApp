@@ -7,7 +7,7 @@ then
     cd build
     git clone https://yarostbaklajana:$GH_TOKEN@github.com/yarostbaklajana/WeatherApp.git .
     git checkout gh-pages
-    ls | grep -v .git | xargs rm -rf
+    ls | grep -v .git | grep -v CNAME | xargs rm -rf
     cd ..
 else 
     echo "Skipping a pre-deployment with the script provider because the current build is a pull request or gh-pages."
