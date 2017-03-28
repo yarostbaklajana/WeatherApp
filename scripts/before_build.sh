@@ -6,6 +6,6 @@ mkdir build
 cd build
 git clone https://github.com/yarostbaklajana/WeatherApp.git
 git show-ref
-git checkout -t -b gh-pages origin/gh-pages
+git checkout origin/gh-pages
 rm -type f
 rm !(.git) -type c
