@@ -3,6 +3,8 @@ node_js:
   - 6.10.0
 before_install:
  - chmod 755 ./scripts/deploy.sh
+ - chmod 755 ./scripts/before_build.sh
+before_script: ./scripts/before_build.sh
 script: npm run build:prod
 deploy:
   provider: script

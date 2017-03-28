@@ -14,5 +14,5 @@ cd build
 git init
 git add .
 git commit -m "Deployed to Github Pages. Build number: $TRAVIS_JOB_NUMBER"
-git push --force --quiet $REPO master:gh-pages 
+git push --quiet $REPO master:gh-pages 
 echo "Successfully pushed changes to GitHub Pages"
