@@ -8,7 +8,10 @@ git config --global user.name "travis CI deploy"
 
 # deploy
 cd build
-git add .
+pwd
+git status
+git add --all .
+git status
 git commit -m "Deployed to Github Pages. Build number: $TRAVIS_JOB_NUMBER"
 git push --quiet 
 echo "Successfully pushed changes to GitHub Pages"
