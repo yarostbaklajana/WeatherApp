@@ -26,8 +26,11 @@ class SearchForm extends React.Component {
     handleSubmit(event) {
         event.preventDefault();
         if (this.state.isValid) {
-            alert('Submitted');
+            let cityID = locationsMap[this.state.inputText];
+            this.props.handleSubmit(cityID);
         }
+
+
     }
 
     isValid(part) {

@@ -62,7 +62,9 @@ module.exports = function (env) {
 
             new ExtractTextWebpackPlugin({
                 filename: "bundle.css"
-            })
+            }),
+
+            new webpack.ContextReplacementPlugin(/moment[\/\\]locale$/, /en/)
         ]
     }
 
