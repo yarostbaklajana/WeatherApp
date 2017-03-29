@@ -1,7 +1,7 @@
 #!/bin/bash
 
 set -o errexit #abort if any command fails
-if [ "$TRAVIS_PULL_REQUEST" != "false" -o "$TRAVIS_BRANCH" != "$SOURCE_BRANCH" ]
+if [ "$TRAVIS_PULL_REQUEST" != "false" -o "$TRAVIS_BRANCH" != "gh-pages" ]
 then 
     mkdir build
     cd build
