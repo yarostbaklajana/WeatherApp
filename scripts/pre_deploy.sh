@@ -1,9 +1,8 @@
 #!/bin/bash
 
 set -o errexit #abort if any command fails
-echo "$TRAVIS_BRANCH"
-echo "$TRAVIS_PULL_REQUEST"
-if [ "$TRAVIS_PULL_REQUEST" == "true" -o "$TRAVIS_BRANCH" == "gh-pages" ]
+
+if [ "$TRAVIS_PULL_REQUEST" != "false" -o "$TRAVIS_BRANCH" == "gh-pages" ]
 then 
     echo "Skipping a pre-deployment with the script provider because the current build is a pull request or gh-pages."
 else 
