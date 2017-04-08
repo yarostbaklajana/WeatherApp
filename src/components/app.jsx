@@ -1,18 +1,24 @@
 import React from 'react';
 import SearchForm from './searchForm';
+import WeatherCard from './weatherCard';
 import axios from 'axios';
 import moment from 'moment';
 
 class App extends React.Component {
     constructor(props) {
         super(props);
+        this.state = {
+            forecasts: []
+        }
 
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     async handleSubmit(cityId) {
         try {
-            console.log(await this.getForecast(cityId));
+            this.setState({
+                forecasts: await this.getForecast(cityId)
+            }); 
         } catch (err) {
             console.error(err);
         }
@@ -42,7 +48,7 @@ class App extends React.Component {
         allForecastedDataArray.forEach((singleForecast) => { forecastCards.push({
                 dateTime: this.convertToLocaleDateTime(singleForecast.dt),
                 weather: singleForecast.weather[0].description,
-                weatherIconUrl: `http://openweathermap.org/img/w/${singleForecast.weather[0].id}.png`,
+                weatherIconUrl: `http://openweathermap.org/img/w/${singleForecast.weather[0].icon}.png`,
                 temperature: Math.round(singleForecast.main.temp),
                 humidity: singleForecast.main.humidity,
                 pressure: this.convertHectopascalsToMmHg(singleForecast.main.pressure),
@@ -84,9 +90,22 @@ class App extends React.Component {
     }
 
     render() {
+        const cardsList = this.state.forecasts.map((singleForecast) => <WeatherCard 
+        key={singleForecast.dateTime}
+        time={singleForecast.dateTime} 
+        iconUrl={singleForecast.weatherIconUrl} 
+        weatherDescription={singleForecast.weather}
+        temperature={singleForecast.temperature}
+        humidity={singleForecast.humidity}
+        windDirection={singleForecast.wind.direction}
+        windSpeed={singleForecast.wind.speed}
+        pressure={singleForecast.pressure}
+        />);
         return (
             <div className='app-container'>
+                <header className='main-header'><h1 className='main-header_heading'>Weather</h1></header>
                 <SearchForm handleSubmit={this.handleSubmit} />
+                <div className='wather-cards-container'>{cardsList}</div>
             </div>
         )
     }
