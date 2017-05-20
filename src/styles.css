@@ -110,26 +110,54 @@ body {
 
 .wather-cards-container {
     font-size: 12px;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
     margin: 8px;
 }
 
 .weather-card {
-    flex: 1 1 20%;
-    min-width: 150px;
     border: 1px solid lightgrey;
-    border-radius: 5px;
-    margin-top: 5px;
-    margin-right: 5px;
     background-color: white;
+    box-sizing: border-box;
+    float: left;
+    width: 48.75%;
+    margin: 0 0.5% 0.5% 0;
+}
+
+.weather-card:nth-child(2n) {
+    margin-right: 0;
 }
 
 .weather-card_property {
-    margin: 5px;
+    margin: 4px 8px;
 }
 
-.weather-icon {
-    margin: 5px;
+@media (min-width: 375px) and (max-width: 767px) {
+    .weather-card {
+        width: 32.5%;
+    }
+
+    .weather-card:nth-child(2n) {
+        margin-right: 0.5%;
+    }
+
+    .weather-card:nth-child(3n) {
+        margin-right: 0;
+    }
+}
+
+@media (min-width: 768px) {
+    .weather-card {
+        width: 16.25%;
+    }
+
+    .weather-card:nth-child(2n) {
+        margin-right: 0.5%;
+    }
+
+    .weather-card:nth-child(4n) {
+        margin-right: 0.5%;
+    }
+
+    .weather-card:nth-child(6n) {
+        margin-right: 0;
+    }
 }
