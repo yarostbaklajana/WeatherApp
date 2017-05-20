@@ -1,6 +1,6 @@
 import React from 'react';
 import SearchForm from './searchForm';
-import WeatherCard from './weatherCard';
+import WeatherResults from './weatherResults';
 import axios from 'axios';
 import moment from 'moment';
 
@@ -8,7 +8,8 @@ class App extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            forecasts: []
+            forecasts: [],
+            error: null
         }
 
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -17,10 +18,13 @@ class App extends React.Component {
     async handleSubmit(cityId) {
         try {
             this.setState({
-                forecasts: await this.getForecast(cityId)
+                forecasts: await this.getForecast(cityId),
+                error: null
             }); 
         } catch (err) {
-            console.error(err);
+            this.setState({
+                error: err.message
+            });
         }
         
     }
@@ -39,7 +43,7 @@ class App extends React.Component {
 
             return this.getForecastCards(threeDayForecastList);
         } catch (err) {
-            throw err.message;
+            throw err;
         }
     }
 
@@ -90,22 +94,11 @@ class App extends React.Component {
     }
 
     render() {
-        const cardsList = this.state.forecasts.map((singleForecast) => <WeatherCard 
-        key={singleForecast.dateTime}
-        time={singleForecast.dateTime} 
-        iconUrl={singleForecast.weatherIconUrl} 
-        weatherDescription={singleForecast.weather}
-        temperature={singleForecast.temperature}
-        humidity={singleForecast.humidity}
-        windDirection={singleForecast.wind.direction}
-        windSpeed={singleForecast.wind.speed}
-        pressure={singleForecast.pressure}
-        />);
         return (
             <div className='app-container'>
                 <header className='main-header'><h1 className='main-header_heading'>Weather</h1></header>
                 <SearchForm handleSubmit={this.handleSubmit} />
-                <div className='wather-cards-container'>{cardsList}</div>
+                <div className='wather-cards-container'>{this.state.error ? this.state.error : <WeatherResults forecasts={this.state.forecasts} />}</div>
             </div>
         )
     }
