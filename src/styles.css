@@ -108,18 +108,18 @@ body {
     position: fixed;
 }
 
-.wather-cards-container {
+.weather-cards-container {
     font-size: 12px;
     margin: 8px;
 }
 
-.wather-cards-container::before,
-.wather-cards-container::after {
+.weather-cards-container::before,
+.weather-cards-container::after {
     display: table;
     content: "";
 }
 
-.wather-cards-container::after {
+.weather-cards-container::after {
     clear: both;
 }
 
