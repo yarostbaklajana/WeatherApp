@@ -1,22 +1,52 @@
 import React from 'react';
 import SearchForm from './searchForm';
+import WeatherResults from './weatherResults';
+import Spinner from './spinner';
 import axios from 'axios';
 import moment from 'moment';
+
+const { CancelToken } = axios;
 
 class App extends React.Component {
     constructor(props) {
         super(props);
+        this.state = {
+            forecasts: [],
+            error: null,
+            isLoading: false,
+            cancelRequest: null
+        }
 
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     async handleSubmit(cityId) {
-        try {
-            console.log(await this.getForecast(cityId));
-        } catch (err) {
-            console.error(err);
+
+        if (this.state.isLoading) {
+            this.state.cancelRequest();
         }
-        
+
+        this.setState({
+            isLoading: true,
+            forecasts: []
+        });
+
+        try {
+
+            this.setState({
+                forecasts: await this.getForecast(cityId),
+                error: null,
+                isLoading: false
+            });
+
+
+
+        } catch (err) {
+            this.setState({
+                error: err.message
+            });
+        }
+
     }
 
     async getForecast(cityId) {
@@ -26,23 +56,30 @@ class App extends React.Component {
                     id: cityId,
                     APPID: process.env.OPENWEATHER_API_KEY,
                     units: 'metric'
-                }
+                },
+
+                cancelToken: new CancelToken((c) => {
+                    this.setState({
+                        cancelRequest: c
+                    });
+                })
             });
-            
+
             const threeDayForecastList = fiveDayForecast.data.list.slice(0, 24);
 
             return this.getForecastCards(threeDayForecastList);
         } catch (err) {
-            throw err.message;
+            throw err;
         }
     }
 
     getForecastCards(allForecastedDataArray) {
         const forecastCards = [];
-        allForecastedDataArray.forEach((singleForecast) => { forecastCards.push({
+        allForecastedDataArray.forEach((singleForecast) => {
+            forecastCards.push({
                 dateTime: this.convertToLocaleDateTime(singleForecast.dt),
                 weather: singleForecast.weather[0].description,
-                weatherIconUrl: `http://openweathermap.org/img/w/${singleForecast.weather[0].id}.png`,
+                weatherIconUrl: `http://openweathermap.org/img/w/${singleForecast.weather[0].icon}.png`,
                 temperature: Math.round(singleForecast.main.temp),
                 humidity: singleForecast.main.humidity,
                 pressure: this.convertHectopascalsToMmHg(singleForecast.main.pressure),
@@ -50,13 +87,14 @@ class App extends React.Component {
                     direction: this.convertToCompassDirection(singleForecast.wind.deg),
                     speed: singleForecast.wind.speed.toFixed(1)
                 }
-            }) });
-            return forecastCards;
+            })
+        });
+        return forecastCards;
     }
 
     convertToLocaleDateTime(utc) {
         const dateTime = moment.unix(utc);
-        return dateTime.format('DD/MM/YYYY - HH:mm'); 
+        return dateTime.format('DD/MM/YYYY - HH:mm');
     }
 
     convertHectopascalsToMmHg(hPa) {
@@ -86,7 +124,10 @@ class App extends React.Component {
     render() {
         return (
             <div className='app-container'>
+                <header className='main-header'><h1 className='main-header_heading'>Weather</h1></header>
                 <SearchForm handleSubmit={this.handleSubmit} />
+
+                <div className='weather-cards-container'>{this.state.isLoading && <Spinner />}{this.state.error ? this.state.error : <WeatherResults forecasts={this.state.forecasts} />}</div>
             </div>
         )
     }

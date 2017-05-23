@@ -1,5 +1,14 @@
 body {
-    font-style: Tahoma, sans-serif;
+    font-family: Tahoma, sans-serif;
+    margin: 0;
+}
+
+.app-container {
+    min-width: 375px;
+}
+
+.search-form {
+    margin: 10px 8px;
 }
 
 .search-form::after,
@@ -15,15 +24,32 @@ body {
 .input-container {
     width: 60%;
     float: left;
-   position: relative;
+    position: relative;
+    margin-right: 10px;
+}
+
+.main-header {
+    padding: 16px 8px;
+    border-bottom: 1px solid lightgrey;
+    background-color: rgba(158, 158, 158, 0.2);
+}
+
+.main-header_heading {
+    font-size: 16px;
+    font-weight: normal;
+    margin: 0;
+    color: gray;
 }
 
 .input-with-autocomplete {
-    height: 25px;
+    font-size: 14px;
+    color: grey;
+    padding: 0 5px;
+    height: 30px;
     width: 95%;
     border-radius: 3px;
     border: 1px solid lightgray;
-     z-index: 100;
+    z-index: 100;
 }
 
 .hints {
@@ -39,7 +65,7 @@ body {
 }
 
 .hints_hint {
-        padding: 1px 0;
+    padding: 1px 0;
 }
 
 .hints_hint:hover {
@@ -52,6 +78,8 @@ body {
 }
 
 .search-button {
+    font-size: 14px;
+    padding: 5px 10px;
     height: 25px;
     line-height: 25px;
     box-sizing: content-box;
@@ -78,4 +106,93 @@ body {
     width: 100%;
     height: 100%;
     position: fixed;
+}
+
+.weather-cards-container {
+    font-size: 12px;
+    margin: 8px;
+}
+
+.weather-cards-container::before,
+.weather-cards-container::after {
+    display: table;
+    content: "";
+}
+
+.weather-cards-container::after {
+    clear: both;
+}
+
+.weather-card {
+    border: 1px solid lightgrey;
+    background-color: white;
+    box-sizing: border-box;
+    float: left;
+    width: 48.75%;
+    margin: 0 0.5% 0.5% 0;
+}
+
+.weather-card:nth-child(2n) {
+    margin-right: 0;
+}
+
+.weather-card_property {
+    margin: 4px 8px;
+}
+
+.spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 50px;
+    height: 50px;
+    animation: roll 3s infinite;
+    opacity: 0.7;
+}
+
+@keyframes roll {
+    0% {
+        transform: rotate(0);
+        background: #42a1f4;
+    }
+    25% {
+        background: #415ff4;
+    }
+    50% {
+        background: #6141f4;
+    }
+    75% {
+        background: #4164f4;
+    }
+    100% {
+        transform: rotate(360deg);
+        background: #4188f4;
+    }
+}
+
+@media (min-width: 375px) and (max-width: 767px) {
+    .weather-card {
+        width: 32.5%;
+    }
+    .weather-card:nth-child(2n) {
+        margin-right: 0.5%;
+    }
+    .weather-card:nth-child(3n) {
+        margin-right: 0;
+    }
+}
+
+@media (min-width: 768px) {
+    .weather-card {
+        width: 16.25%;
+    }
+    .weather-card:nth-child(2n) {
+        margin-right: 0.5%;
+    }
+    .weather-card:nth-child(4n) {
+        margin-right: 0.5%;
+    }
+    .weather-card:nth-child(6n) {
+        margin-right: 0;
+    }
 }
