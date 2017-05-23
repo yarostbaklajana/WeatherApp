@@ -5,8 +5,7 @@ import Spinner from './spinner';
 import axios from 'axios';
 import moment from 'moment';
 
-const CancelToken = axios.CancelToken;
-let cancelRequest;
+const { CancelToken } = axios;
 
 class App extends React.Component {
     constructor(props) {
@@ -14,16 +13,17 @@ class App extends React.Component {
         this.state = {
             forecasts: [],
             error: null,
-            isLoading: false
+            isLoading: false,
+            cancelRequest: null
         }
 
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     async handleSubmit(cityId) {
-        
+
         if (this.state.isLoading) {
-            cancelRequest();
+            this.state.cancelRequest();
         }
 
         this.setState({
@@ -58,7 +58,11 @@ class App extends React.Component {
                     units: 'metric'
                 },
 
-                cancelToken: new CancelToken((c) => { cancelRequest = c })
+                cancelToken: new CancelToken((c) => {
+                    this.setState({
+                        cancelRequest: c
+                    });
+                })
             });
 
             const threeDayForecastList = fiveDayForecast.data.list.slice(0, 24);
@@ -123,7 +127,7 @@ class App extends React.Component {
                 <header className='main-header'><h1 className='main-header_heading'>Weather</h1></header>
                 <SearchForm handleSubmit={this.handleSubmit} />
 
-                <div className='wather-cards-container'>{this.state.isLoading && <Spinner />}{this.state.error ? this.state.error : <WeatherResults forecasts={this.state.forecasts} />}</div>
+                <div className='weather-cards-container'>{this.state.isLoading && <Spinner />}{this.state.error ? this.state.error : <WeatherResults forecasts={this.state.forecasts} />}</div>
             </div>
         )
     }
