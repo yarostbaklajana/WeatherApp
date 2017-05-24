@@ -6,6 +6,7 @@ import axios from 'axios';
 import moment from 'moment';
 
 const { CancelToken } = axios;
+const CACHE = new Map();
 
 class App extends React.Component {
     constructor(props) {
@@ -31,20 +32,34 @@ class App extends React.Component {
             forecasts: []
         });
 
-        try {
+        if (CACHE.get(cityId) && !this.isExpiredRequest(CACHE.get(cityId).requestedTime)) {
 
             this.setState({
-                forecasts: await this.getForecast(cityId),
-                error: null,
+                forecasts: CACHE.get(cityId).forecasts,
                 isLoading: false
             });
+            
+        } else {
+            try {
+                let requestedTime = new Date();
+                let forecasts = await this.getForecast(cityId);
 
+                this.setState({
+                    forecasts: forecasts,
+                    error: null,
+                    isLoading: false
+                });
 
+                CACHE.set(cityId, {
+                    forecasts: forecasts,
+                    requestedTime: requestedTime
+                });
 
-        } catch (err) {
-            this.setState({
-                error: err.message
-            });
+            } catch (err) {
+                this.setState({
+                    error: err.message
+                });
+            }
         }
 
     }
@@ -90,6 +105,10 @@ class App extends React.Component {
             })
         });
         return forecastCards;
+    }
+
+    isExpiredRequest(date) {
+        return new Date().getTime() - date.getTime() > 300000;
     }
 
     convertToLocaleDateTime(utc) {
