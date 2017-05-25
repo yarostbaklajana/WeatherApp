@@ -11,44 +11,40 @@ class OpenWeatherClient {
 
     }
 
-    getWeather(cityId) {
+    async getWeather(locationId) {
 
-        const cachedForecasts = this.CACHE.get(cityId);
+        const cachedForecasts = this.CACHE.get(locationId);
 
-        return new Promise((resolve, reject) => {
-            if (cachedForecasts && !this.isExpiredRequest(cachedForecasts.requestedTime)) {
-                resolve(cachedForecasts.forecasts);
-            } else {
-                try {
-                    if (this.cancelRequest !== null) {
-                        this.cancelRequest();
-                    }
-                    let requestedTime = new Date();
-                    let forecasts = this.getForecast(cityId);
-
-                    this.CACHE.set(cityId, {
-                        forecasts: forecasts,
-                        requestedTime: requestedTime
-                    });
-
-                    resolve(forecasts);
-
-                } catch (err) {
-                    reject(err);
-
+        if (cachedForecasts && !this.isExpiredRequest(cachedForecasts.requestedTime)) {
+            return cachedForecasts.forecasts;
+        } else {
+            try {
+                if (this.cancelRequest !== null) {
+                    this.cancelRequest();
                 }
-            }
+                let requestedTime = new Date();
+                let forecasts = await this.getForecast(locationId);
 
-        });
+                this.CACHE.set(locationId, {
+                    forecasts: forecasts,
+                    requestedTime: requestedTime
+                });
+
+                return forecasts;
+
+            } catch (err) {
+                throw err;
+            }
+        }
 
     }
 
-    async getForecast(cityId) {
+    async getForecast(locationId) {
 
         try {
             const fiveDayForecast = await axios.get('http://api.openweathermap.org/data/2.5/forecast', {
                 params: {
-                    id: cityId,
+                    id: locationId,
                     APPID: process.env.OPENWEATHER_API_KEY,
                     units: 'metric'
                 },

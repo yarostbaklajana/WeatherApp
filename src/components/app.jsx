@@ -17,7 +17,7 @@ class App extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    handleSubmit(cityId) {
+    async handleSubmit(locationId) {
 
         this.setState({
             isLoading: true,
@@ -25,19 +25,18 @@ class App extends React.Component {
             error: null
         });
 
-        OpenWeatherClient.getWeather(cityId).then(
-            (allForecastedDataArray) => {
-                this.setState({
-                    forecasts: this.getForecastCards(allForecastedDataArray),
-                    isLoading: false
-                });
-            },
-            (error) => {
-                this.setState({
-                    error: error.message,
-                    isLoading: false
-                });
+        try {
+            this.setState({
+                forecasts: this.getForecastCards(await OpenWeatherClient.getWeather(locationId)),
+                errror: null,
+                isLoading: false
             });
+        } catch (err) {
+            this.setState({
+                error: err.message,
+                isLoading: false
+            });
+        }
     }
 
     getForecastCards(allForecastedDataArray) {
@@ -94,7 +93,10 @@ class App extends React.Component {
                 <header className='main-header'><h1 className='main-header_heading'>Weather</h1></header>
                 <SearchForm handleSubmit={this.handleSubmit} />
 
-                <div className='weather-cards-container'>{this.state.isLoading && <Spinner />}{this.state.error ? <div className='error-message'>{this.state.error}</div> : <WeatherResults forecasts={this.state.forecasts} />}</div>
+                <div className='weather-cards-container'>
+                    {this.state.isLoading && <Spinner />}
+                    {this.state.error ? <div className='error-message'> {this.state.error} </div> : <WeatherResults forecasts={this.state.forecasts} />}
+                </div>
             </div>
         )
     }
