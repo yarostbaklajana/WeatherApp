@@ -2,10 +2,8 @@ import React from 'react';
 import SearchForm from './searchForm';
 import WeatherResults from './weatherResults';
 import Spinner from './spinner';
-import axios from 'axios';
+import OpenWeatherClient from '../client/openWeatherClient';
 import moment from 'moment';
-
-const { CancelToken } = axios;
 
 class App extends React.Component {
     constructor(props) {
@@ -13,63 +11,31 @@ class App extends React.Component {
         this.state = {
             forecasts: [],
             error: null,
-            isLoading: false,
-            cancelRequest: null
+            isLoading: false
         }
 
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    async handleSubmit(cityId) {
-
-        if (this.state.isLoading) {
-            this.state.cancelRequest();
-        }
+    async handleSubmit(locationId) {
 
         this.setState({
             isLoading: true,
-            forecasts: []
+            forecasts: [],
+            error: null
         });
 
         try {
-
             this.setState({
-                forecasts: await this.getForecast(cityId),
-                error: null,
+                forecasts: this.getForecastCards(await OpenWeatherClient.getWeather(locationId)),
+                errror: null,
                 isLoading: false
             });
-
-
-
         } catch (err) {
             this.setState({
-                error: err.message
+                error: err.message,
+                isLoading: false
             });
-        }
-
-    }
-
-    async getForecast(cityId) {
-        try {
-            const fiveDayForecast = await axios.get('http://api.openweathermap.org/data/2.5/forecast', {
-                params: {
-                    id: cityId,
-                    APPID: process.env.OPENWEATHER_API_KEY,
-                    units: 'metric'
-                },
-
-                cancelToken: new CancelToken((c) => {
-                    this.setState({
-                        cancelRequest: c
-                    });
-                })
-            });
-
-            const threeDayForecastList = fiveDayForecast.data.list.slice(0, 24);
-
-            return this.getForecastCards(threeDayForecastList);
-        } catch (err) {
-            throw err;
         }
     }
 
@@ -127,7 +93,10 @@ class App extends React.Component {
                 <header className='main-header'><h1 className='main-header_heading'>Weather</h1></header>
                 <SearchForm handleSubmit={this.handleSubmit} />
 
-                <div className='weather-cards-container'>{this.state.isLoading && <Spinner />}{this.state.error ? this.state.error : <WeatherResults forecasts={this.state.forecasts} />}</div>
+                <div className='weather-cards-container'>
+                    {this.state.isLoading && <Spinner />}
+                    {this.state.error ? <div className='error-message'> {this.state.error} </div> : <WeatherResults forecasts={this.state.forecasts} />}
+                </div>
             </div>
         )
     }
