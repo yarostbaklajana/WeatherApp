@@ -2,11 +2,8 @@ import React from 'react';
 import SearchForm from './searchForm';
 import WeatherResults from './weatherResults';
 import Spinner from './spinner';
-import axios from 'axios';
+import OpenWeatherClient from '../client/openWeatherClient';
 import moment from 'moment';
-
-const { CancelToken } = axios;
-const CACHE = new Map();
 
 class App extends React.Component {
     constructor(props) {
@@ -14,78 +11,33 @@ class App extends React.Component {
         this.state = {
             forecasts: [],
             error: null,
-            isLoading: false,
-            cancelRequest: null
+            isLoading: false
         }
 
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    async handleSubmit(cityId) {
-
-        if (this.state.isLoading) {
-            this.state.cancelRequest();
-        }
+    handleSubmit(cityId) {
 
         this.setState({
             isLoading: true,
-            forecasts: []
+            forecasts: [],
+            error: null
         });
 
-        if (CACHE.get(cityId) && !this.isExpiredRequest(CACHE.get(cityId).requestedTime)) {
-
-            this.setState({
-                forecasts: CACHE.get(cityId).forecasts,
-                isLoading: false
-            });
-            
-        } else {
-            try {
-                let requestedTime = new Date();
-                let forecasts = await this.getForecast(cityId);
-
+        OpenWeatherClient.getWeather(cityId).then(
+            (allForecastedDataArray) => {
                 this.setState({
-                    forecasts: forecasts,
-                    error: null,
+                    forecasts: this.getForecastCards(allForecastedDataArray),
                     isLoading: false
                 });
-
-                CACHE.set(cityId, {
-                    forecasts: forecasts,
-                    requestedTime: requestedTime
-                });
-
-            } catch (err) {
+            },
+            (error) => {
                 this.setState({
-                    error: err.message
+                    error: error.message,
+                    isLoading: false
                 });
-            }
-        }
-
-    }
-
-    async getForecast(cityId) {
-        try {
-            const fiveDayForecast = await axios.get('http://api.openweathermap.org/data/2.5/forecast', {
-                params: {
-                    id: cityId,
-                    APPID: process.env.OPENWEATHER_API_KEY,
-                    units: 'metric'
-                },
-
-                cancelToken: new CancelToken((c) => {
-                    this.setState({
-                        cancelRequest: c
-                    });
-                })
             });
-
-            const threeDayForecastList = fiveDayForecast.data.list.slice(0, 24);
-
-            return this.getForecastCards(threeDayForecastList);
-        } catch (err) {
-            throw err;
-        }
     }
 
     getForecastCards(allForecastedDataArray) {
@@ -105,10 +57,6 @@ class App extends React.Component {
             })
         });
         return forecastCards;
-    }
-
-    isExpiredRequest(date) {
-        return new Date().getTime() - date.getTime() > 300000;
     }
 
     convertToLocaleDateTime(utc) {
@@ -146,7 +94,7 @@ class App extends React.Component {
                 <header className='main-header'><h1 className='main-header_heading'>Weather</h1></header>
                 <SearchForm handleSubmit={this.handleSubmit} />
 
-                <div className='weather-cards-container'>{this.state.isLoading && <Spinner />}{this.state.error ? this.state.error : <WeatherResults forecasts={this.state.forecasts} />}</div>
+                <div className='weather-cards-container'>{this.state.isLoading && <Spinner />}{this.state.error ? <div className='error-message'>{this.state.error}</div> : <WeatherResults forecasts={this.state.forecasts} />}</div>
             </div>
         )
     }
